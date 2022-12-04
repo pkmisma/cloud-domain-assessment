@@ -8,18 +8,23 @@ pipeline {
      }
      stage('Terraform Init') {
         steps {
-            tool name: 'terraform', type: 'terraform'
+            dir('Terraform/') {
             sh 'terraform init'
+}
         }
      }
      stage('Terraform plan') {
         steps {
+            dir('Terraform/') {
             sh 'terraform plan'
+}
         }
      }
      stage('Terraform Apply') {
         steps {
+            dir('Terraform/') {
             sh 'terraform apply --auto-approve'
+}
         }
      }
         
