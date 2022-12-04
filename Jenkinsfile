@@ -9,17 +9,17 @@ pipeline {
      }
      stage('Terraform Inirt') {
         steps {
-            terraform Init
+            sh 'terraform init'
         }
      }
      stage('Terraform plan') {
         steps {
-            terraform plan
+            sh 'terraform plan'
         }
      }
      stage('Terraform Apply') {
         steps {
-            terraform apply --auto-approve
+            sh 'terraform apply --auto-approve'
         }
      }
         
