@@ -2,7 +2,7 @@ pipeline {
     agent any
 
    stages {
-     stage('Checkout the SCM') {
+     stage('Checkout SCM') {
         steps {
               git 'https://github.com/pkmisma/cloud-domain-assessment.git'
      }
