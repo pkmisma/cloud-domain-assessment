@@ -1,5 +1,7 @@
 pipeline {
     agent any
+    tool name: 'terraform', type: 'terraform'
+    
 
    stages {
      stage('Checkout the SCM') {
@@ -7,7 +9,7 @@ pipeline {
               git 'https://github.com/pkmisma/cloud-domain-assessment.git'
      }
      }
-     stage('Terraform Inirt') {
+     stage('Terraform Init') {
         steps {
             dir('Terraform') {
 }
