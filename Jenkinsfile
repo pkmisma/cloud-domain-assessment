@@ -9,6 +9,8 @@ pipeline {
      }
      stage('Terraform Inirt') {
         steps {
+            dir('Terraform') {
+}
             sh 'terraform init'
         }
      }
