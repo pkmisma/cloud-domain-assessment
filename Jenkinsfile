@@ -31,7 +31,7 @@ pipeline {
      stage('Install web-server and modify the index.html') {
        steps {
         dir('Ansible/') {
-        ansible-playbook -i inventory web-server.yaml -vvv
+        sh 'ansible-playbook -i inventory web-server.yaml -vvv'
        }        
      }
     }
