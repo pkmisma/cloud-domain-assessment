@@ -4,8 +4,8 @@ pipeline {
    stages {
      stage('Checkout SCM') {
         steps {
-              git 'https://github.com/pkmisma/cloud-domain-assessment.git'
-        }
+              git url: 'https://github.com/pkmisma/cloud-domain-assessment.git',
+              credentialsId: '0a76630c-e1a1-4355-9b23-a3efd004154a'
      }
      stage('Terraform Init') {
         steps {
