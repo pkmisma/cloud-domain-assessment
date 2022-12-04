@@ -42,8 +42,7 @@ resource "aws_instance" "project-iac" {
   ]
   root_block_device {
     delete_on_termination = true
-    iops = 100
-    volume_size = 10
+    volume_size = 20
     volume_type = "gp2"
     encrypted  = true
   }
