@@ -1,0 +1,27 @@
+---
+
+- name: install webserver copy index.html and enable basic auth
+  hosts: server1
+  become: yes
+  tasks:
+        - name: install the web server
+          package:
+               name: nginx
+               state: present
+          tags:
+              - webserver
+
+        - name: copy the customised index.html file
+          copy:
+               src: index.html
+               dest: /var/www/html/
+          tags:
+              - index
+
+        - name: restart the service
+          service:
+                name: nginx
+                state: restarted
+                enabled: yes
+          tags:
+              - restart
