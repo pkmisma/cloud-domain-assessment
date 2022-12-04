@@ -33,7 +33,6 @@ pipeline {
         dir('Ansible/') {
         ansible-playbook -i inventory web-server.yaml -vvv
        }        
-      
      }
     }
    
