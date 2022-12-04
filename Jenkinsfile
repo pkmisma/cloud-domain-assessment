@@ -6,6 +6,7 @@ pipeline {
               git 'https://github.com/pkmisma/cloud-domain-assessment.git'
      }
      }
+   }
      stage('Terraform Init') {
         steps {
             dir('Terraform/') {
