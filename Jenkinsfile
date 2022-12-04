@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    tool name: 'terraform', type: 'terraform'
-    
-
+    //tool name: 'terraform', type: 'terraform'
    stages {
      stage('Checkout the SCM') {
         steps {
@@ -11,7 +9,7 @@ pipeline {
      }
      stage('Terraform Init') {
         steps {
-            dir('Terraform') {
+            dir('Terraform/') {
 }
             sh 'terraform init'
         }
