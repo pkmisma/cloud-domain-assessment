@@ -9,7 +9,7 @@ pipeline {
      }
      stage('Terraform Inirt') {
         steps {
-            sh 'terraform init'
+            sh 'terraform Initt'
         }
      }
      stage('Terraform plan') {
