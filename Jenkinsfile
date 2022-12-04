@@ -2,14 +2,24 @@ pipeline {
     agent any
 
    stages {
-     stage('Hello') {
+     stage('Checkout SCM') {
         steps {
-              echo "Hello world"
+              git 'https://github.com/pkmisma/cloud-domain-assessment.git'
         }
      }
-     stage('this is second stage') {
+     stage('Terraform Init') {
         steps {
-            echo "hellow second stage"
+            sh 'terraform init'
+        }
+     }
+     stage('Terraform plan') {
+        steps {
+            sh 'terraform plan'
+        }
+     }
+     stage(Terraform Apply) {
+        steps {
+            sh 'terraform apply --auto-approve'
         }
      }
         
