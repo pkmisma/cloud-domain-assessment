@@ -78,13 +78,6 @@ resource "aws_security_group" "project-iac-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port = 80
-    protocol = "tcp"
-    to_port = 80
-    security_group_id = lookup(aws_security_group.alb.id)
-  }
-
 
   egress {
     from_port       = 0
