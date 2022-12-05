@@ -11,7 +11,7 @@ resource "aws_vpc" "my-vpc" {
 
 resource "aws_subnet" "subnet-public-1" {
     vpc_id = "${aws_vpc.my-vpc.id}"
-    cidr_block = ["10.0.1.0/24"]
+    cidr_block = "10.0.1.0/24"
     map_public_ip_on_launch = "true" //it makes this a public subnet
     availability_zone = "us-west-1a"
 
@@ -31,7 +31,7 @@ resource "aws_route_table" "public-crt" {
     
     route {
         //associated subnet can reach everywhere
-        cidr_block = ["0.0.0.0/0"] 
+        cidr_block = "0.0.0.0/0" 
         //CRT uses this IGW to reach internet
         gateway_id = "${aws_internet_gateway.iac-igw.id}" 
     }
@@ -83,7 +83,7 @@ resource "aws_security_group" "project-iac-sg" {
     from_port = 80
     protocol = "tcp"
     to_port = 80
-    security_group_id = "${aws_security_group.alb.id}"
+    security_group_id = ["${aws_security_group.alb.id}"]
   }
 
 
