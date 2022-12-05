@@ -83,7 +83,7 @@ resource "aws_lb_target_group" "test" {
 resource "aws_lb_target_group_attachment"
 "tg_attachment_test" {
     target_group_arn = aws_lb_target_group.sample_tg["test"].arn
-    target_id        = "${aws_instance.project-iac.instance.id}"
+    target_id        = aws_instance.project-iac.instance.id
     port             = 80
 }
 
