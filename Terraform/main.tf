@@ -8,7 +8,7 @@ resource "aws_security_group" "project-iac-sg" {
   // To Allow HTTP Traffic
   ingress {
     from_port = 22
-    protocol = "ssh"
+    protocol = "tcp"
     to_port = 22
     cidr_blocks = ["0.0.0.0/0"]
   }
