@@ -5,7 +5,6 @@ resource "aws_vpc" "my-vpc" {
     cidr_block = "10.0.0.0/16"
     enable_dns_support = "true" #gives you an internal domain name
     enable_dns_hostnames = "true" #gives you an internal host name
-    enable_classiclink = "false"
     instance_tenancy = "default"   
 }
 
@@ -83,7 +82,7 @@ resource "aws_security_group" "project-iac-sg" {
     from_port = 80
     protocol = "tcp"
     to_port = 80
-    security_group_id = ["${aws_security_group.alb.id}"]
+    security_group_id = aws_security_group.alb.id
   }
 
 
