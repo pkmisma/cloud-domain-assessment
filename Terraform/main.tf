@@ -12,7 +12,7 @@ resource "aws_subnet" "subnet-public-1" {
     vpc_id = "${aws_vpc.my-vpc.id}"
     cidr_block = "10.0.1.0/24"
     map_public_ip_on_launch = "true" //it makes this a public subnet
-    availability_zone = "us-west-1a"
+    availability_zone = "us-east-1a"
 
 }
 
@@ -172,7 +172,7 @@ resource "aws_lb_listener" "lb_listner_https_test" {
 # generate inventory file for Ansible
 resource "local_file" "new_var_file" {
     content  = "aws_instance.project-iac.public_ip"
-    filename = "../Ansible/inventory"
+    filename = "/var/lib/jenkins/workspace/Web-server-pipelin/Ansible/inventory"
 }
 
 
