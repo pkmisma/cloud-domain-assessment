@@ -96,6 +96,8 @@ resource "aws_lb" "sample_lb" {
          Environment = "testing"
          Role        = "Sample-Application"
     }
+    
+    depends_on = [ aws_security_group.alb ]
 }
 
 
@@ -126,4 +128,4 @@ resource "aws_lb_listener" "lb_listner_https_test" {
 }
 
 
-depends_on = [ aws_security_group.alb ]
+
