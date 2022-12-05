@@ -24,7 +24,7 @@ variable "alb" {
 variable "security_grp" {
     type = list
     default = ["sg-0f0c50b74a9bae0d1"]
-
+}
 variable "subnets" {
     type = list
     default = ["subnet-0bb7101f9d2e5390b","subnet-02caf61fc1a43e7e7","subnet-032b9d85cfe389102"]
