@@ -97,7 +97,7 @@ resource "aws_security_group" "project-iac-sg" {
 resource "aws_instance" "project-iac" {
   ami = lookup(var.awsprops, "ami")
   instance_type = lookup(var.awsprops, "itype")
-  subnet_id = lookup(var.awsprops, "subnet") 
+  subnet_id = "${aws_subnet.subnet-public-1.id}" 
   associate_public_ip_address = lookup(var.awsprops, "publicip")
   key_name = lookup(var.awsprops, "keyname")
 
