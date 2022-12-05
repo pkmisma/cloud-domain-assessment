@@ -126,8 +126,8 @@ output "ec2instance" {
   value = aws_instance.project-iac.public_ip
 }
 
-resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-log-bucket"
+resource "aws_s3_bucket_versioning" "log_bucket" {
+  bucket = "my-app-lblog-bucket"
   acl    = "private"
 
   versioning {
@@ -146,7 +146,7 @@ resource "aws_lb" "sample_lb" {
     enable_deletion_protection = true
 
   access_logs {
-    bucket  = aws_s3_bucket.log_bucket.bucket
+    bucket  = aws_s3_bucket_versioning.log_bucket.bucket
     prefix  = "app-lb"
     enabled = true
   }
