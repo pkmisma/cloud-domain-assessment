@@ -9,21 +9,21 @@ pipeline {
      stage('Terraform Init') {
         steps {
             dir('Terraform/') {
-            sh 'terraform init --no-color'
+            sh 'terraform init -no-color'
 }
         }
      }
      stage('Terraform plan') {
         steps {
             dir('Terraform/') {
-            sh 'terraform plan --no-color'
+            sh 'terraform plan -no-color'
 }
         }
      }
      stage('Terraform Apply') {
         steps {
             dir('Terraform/') {
-            sh 'terraform apply --auto-approve --no-color'
+            sh 'terraform apply --auto-approve -no-color'
 }
         }
      }
