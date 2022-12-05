@@ -12,9 +12,16 @@ resource "aws_subnet" "subnet-public" {
     vpc_id = "${aws_vpc.my-vpc.id}"
     count = length(var.public_subnet_cidrs)
     availability_zone       = "${var.aws_region}${var.zones[count.index]}"
+    cidr_block              = var.public_subnet_cidrs[count.index]
     map_public_ip_on_launch = "true" //it makes this a public subnet
 }
 
+resource "aws_subnet" "subnet-webserver" {
+    vpc_id = "${aws_vpc.my-vpc.id}"
+    availability_zone       = "us-east-1a"
+    cidr_block = "10.0.3.0/27"
+    map_public_ip_on_launch = "true" //it makes this a public subnet
+}
 
 # Create Internet Gateway
 
@@ -38,7 +45,8 @@ resource "aws_route_table" "public-crt" {
 }
 
 resource "aws_route_table_association" "crta-public-subnet-1"{
-    subnet_id = "${aws_subnet.subnet-public.id}"
+    count = length(var.public_subnet_cidrs)
+    subnet_id      = element(aws_subnet.subnet-public.*.id, count.index)
     route_table_id = "${aws_route_table.public-crt.id}"
 }
 
@@ -97,7 +105,7 @@ resource "aws_security_group" "project-iac-sg" {
 resource "aws_instance" "project-iac" {
   ami = lookup(var.awsprops, "ami")
   instance_type = lookup(var.awsprops, "itype")
-  subnet_id = "${aws_subnet.subnet-public.id}" 
+  subnet_id = "${aws_subnet.subnet-webserver.id}" 
   associate_public_ip_address = lookup(var.awsprops, "publicip")
   key_name = lookup(var.awsprops, "keyname")
 
