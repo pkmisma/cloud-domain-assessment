@@ -8,21 +8,14 @@ resource "aws_vpc" "my-vpc" {
     instance_tenancy = "default"   
 }
 
-resource "aws_subnet" "subnet-public-1" {
+resource "aws_subnet" "subnet-public" {
     vpc_id = "${aws_vpc.my-vpc.id}"
-    cidr_block = "10.0.1.0/24"
+    count = length(var.public_subnet_cidrs)
+    availability_zone       = "${var.aws_region}${var.zones[count.index]}"
     map_public_ip_on_launch = "true" //it makes this a public subnet
     availability_zone = "us-east-1a"
 }
 
-resource "aws_subnet" "subnet-public-2" {
-    vpc_id = "${aws_vpc.my-vpc.id}"
-    cidr_block = "10.0.2.0/26"
-    map_public_ip_on_launch = "true" //it makes this a public subnet
-    availability_zone = "us-east-1b"
-
-
-}
 
 # Create Internet Gateway
 
@@ -46,7 +39,7 @@ resource "aws_route_table" "public-crt" {
 }
 
 resource "aws_route_table_association" "crta-public-subnet-1"{
-    subnet_id = "${aws_subnet.subnet-public-1.id}"
+    subnet_id = "${aws_subnet.subnet-public.id}"
     route_table_id = "${aws_route_table.public-crt.id}"
 }
 
@@ -105,7 +98,7 @@ resource "aws_security_group" "project-iac-sg" {
 resource "aws_instance" "project-iac" {
   ami = lookup(var.awsprops, "ami")
   instance_type = lookup(var.awsprops, "itype")
-  subnet_id = "${aws_subnet.subnet-public-1.id}" 
+  subnet_id = "${aws_subnet.subnet-public.id}" 
   associate_public_ip_address = lookup(var.awsprops, "publicip")
   key_name = lookup(var.awsprops, "keyname")
 
@@ -149,7 +142,7 @@ resource "aws_lb" "sample_lb" {
     internal           = false
     load_balancer_type = "application" 
     security_groups    = ["${aws_security_group.alb.id}"]
-    subnets = lookup(var.subnets)
+    subnets = aws_subnet.subnet-public.*.id
     enable_cross_zone_load_balancing = "true"
 
     enable_deletion_protection = true
