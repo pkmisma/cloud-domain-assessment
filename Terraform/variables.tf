@@ -9,9 +9,8 @@ variable "awsprops" {
     vpc = "vpc-066ec79e503c40324"
     ami = "ami-0a6b2839d44d781b2"
     itype = "t2.micro"
-    subnet = "subnet-0bb7101f9d2e5390b"
     publicip = true
-    keyname = "kk"
+    keyname = "aws-key"
     secgroupname = "webserver-Sec-Group"
   }
 }
