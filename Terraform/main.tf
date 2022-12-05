@@ -78,7 +78,6 @@ resource "aws_security_group" "project-iac-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-
   egress {
     from_port       = 0
     to_port         = 0
@@ -170,16 +169,12 @@ resource "aws_lb_listener" "lb_listner_https_test" {
   }
 }
 
-
 # generate inventory file for Ansible
-resource "local_file" "hosts_cfg" {
-  content = templatefile("${path.module}/templates/hosts.tpl",
-    {
-      web_server = aws_instance.project-iac.public_ip
-    }
-  )
-  filename = "../ansible/inventory/hosts.cfg"
+resource "local_file" "new_var_file" {
+    content  = "aws_instance.project-iac.public_ip"
+    filename = "../Ansible/inventory"
 }
+
 
 
 
