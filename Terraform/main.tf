@@ -73,7 +73,7 @@ resource "aws_lb" "sample_lb" {
 }
 
 
-resource "aws_lb_target_group" "test" {
+resource "aws_lb_target_group" "sample_tg" {
   name     = "tf-example-lb-tg"
   port     = 80
   protocol = "HTTP"
@@ -81,7 +81,7 @@ resource "aws_lb_target_group" "test" {
 }
 
 resource "aws_lb_target_group_attachment" "tg_attachment_test" {
-    target_group_arn = aws_lb_target_group.sample_tg["test"].arn
+    target_group_arn = aws_lb_target_group.sample_tg.arn
     target_id        = aws_instance.project-iac.instance.id
     port             = 80
 }
