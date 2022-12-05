@@ -126,14 +126,31 @@ output "ec2instance" {
   value = aws_instance.project-iac.public_ip
 }
 
+resource "aws_s3_bucket" "log_bucket" {
+  bucket = "my-log-bucket"
+  acl    = "private"
+
+  versioning {
+    enabled = true
+  }
+}
+
 
 resource "aws_lb" "sample_lb" {
     name = lookup(var.alb, "alb_names")
     internal           = false
     load_balancer_type = "application" 
     security_groups    = ["${aws_security_group.alb.id}"]
-    subnets            = [for subnet in aws_subnet.public : aws_subnet.subnet-public-1.id]
     enable_cross_zone_load_balancing = "true"
+
+    enable_deletion_protection = true
+
+  access_logs {
+    bucket  = aws_s3_bucket.log_bucket.bucket
+    prefix  = "app-lb"
+    enabled = true
+  }
+
     tags = {
          Environment = "testing"
          Role        = "Sample-Application"
