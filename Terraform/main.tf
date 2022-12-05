@@ -59,11 +59,37 @@ output "ec2instance" {
   value = aws_instance.project-iac.public_ip
 }
 
+resource "aws_security_group" "alb" {
+  name        = "terraform_alb_security_group"
+  description = "Terraform load balancer security group"
+  vpc_id      = lookup(var.awsprops, "vpc")
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = "0.0.0.0/0"
+  }
+
+
+  # Allow all outbound traffic.
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "terraform-example-alb-security-group"
+  }
+}
+
 resource "aws_lb" "sample_lb" {
     name = lookup(var.alb, "alb_names")
     internal           = false
     load_balancer_type = "application" 
-    security_groups    = var.security_grp
+    security_groups    = ["${aws_security_group.alb.id}"]
     subnets            = var.subnets
     enable_cross_zone_load_balancing = "true"
     tags = {
@@ -98,3 +124,6 @@ resource "aws_lb_listener" "lb_listner_https_test" {
      target_group_arn = aws_lb_target_group.sample_tg.arn
   }
 }
+
+
+depends_on = [ aws_security_group.alb ]
