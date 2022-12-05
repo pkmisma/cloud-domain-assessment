@@ -82,7 +82,7 @@ resource "aws_security_group" "project-iac-sg" {
     from_port = 80
     protocol = "tcp"
     to_port = 80
-    security_group_id = aws_security_group.alb.id
+    security_group_id = lookup(aws_security_group.alb.id)
   }
 
 
