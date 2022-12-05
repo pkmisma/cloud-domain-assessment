@@ -1,6 +1,4 @@
-provider "aws" {
-  region = lookup(var.awsprops, "region")
-}
+
 
 resource "aws_security_group" "project-iac-sg" {
   name = lookup(var.awsprops, "secgroupname")
@@ -9,9 +7,9 @@ resource "aws_security_group" "project-iac-sg" {
 
   // To Allow HTTP Traffic
   ingress {
-    from_port = 80
-    protocol = "tcp"
-    to_port = 80
+    from_port = 22
+    protocol = "ssh"
+    to_port = 22
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -59,4 +57,45 @@ resource "aws_instance" "project-iac" {
 
 output "ec2instance" {
   value = aws_instance.project-iac.public_ip
+}
+
+resource "aws_lb" "sample_lb" {
+    name = lookup(var.alb, "alb_names")
+    internal           = false
+    load_balancer_type = "application" 
+    security_groups    = var.security_grp
+    subnets            = var.subnets
+    enable_cross_zone_load_balancing = "true"
+    tags = {
+         Environment = "testing"
+         Role        = "Sample-Application"
+    }
+}
+
+
+resource "aws_lb_target_group" "test" {
+  name     = "tf-example-lb-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = lookup(var.alb, "vpc_id")
+}
+
+resource "aws_lb_target_group_attachment"
+"tg_attachment_test" {
+    target_group_arn = aws_lb_target_group.sample_tg["test"].arn
+    target_id        = "${aws_instance.project-iac.instance.id}"
+    port             = 80
+}
+
+
+resource "aws_lb_listener" "lb_listner_https_test" {
+  load_balancer_arn = aws_lb.sample_lb["test"].id
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "arn:aws:acm:us-east-1:387779321901:certificate/c3c682fc-3adb-43d7-a63b-d2d58156d0e4"
+  default_action {
+     type             = "forward"
+     target_group_arn = aws_lb_target_group.sample_tg["test"].id
+  }
 }
