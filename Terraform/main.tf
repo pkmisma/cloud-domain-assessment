@@ -80,9 +80,6 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
-    Name = "terraform-example-alb-security-group"
-  }
 }
 
 resource "aws_lb" "sample_lb" {
