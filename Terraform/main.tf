@@ -132,7 +132,7 @@ resource "aws_lb" "sample_lb" {
     internal           = false
     load_balancer_type = "application" 
     security_groups    = ["${aws_security_group.alb.id}"]
-    subnet_id            = "${aws_subnet.subnet-public-1.id}"
+    subnets            = [for subnet in aws_subnet.public : aws_subnet.subnet-public-1.id]
     enable_cross_zone_load_balancing = "true"
     tags = {
          Environment = "testing"
