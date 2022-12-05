@@ -88,13 +88,13 @@ resource "aws_lb_target_group_attachment" "tg_attachment_test" {
 
 
 resource "aws_lb_listener" "lb_listner_https_test" {
-  load_balancer_arn = aws_lb.sample_lb["test"].id
+  load_balancer_arn = aws_lb.sample_lb.id
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = "arn:aws:acm:us-east-1:387779321901:certificate/c3c682fc-3adb-43d7-a63b-d2d58156d0e4"
   default_action {
      type             = "forward"
-     target_group_arn = aws_lb_target_group.sample_tg["test"].id
+     target_group_arn = aws_lb_target_group.sample_tg.arn
   }
 }
