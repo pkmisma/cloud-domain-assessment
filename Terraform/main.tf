@@ -13,7 +13,6 @@ resource "aws_subnet" "subnet-public" {
     count = length(var.public_subnet_cidrs)
     availability_zone       = "${var.aws_region}${var.zones[count.index]}"
     map_public_ip_on_launch = "true" //it makes this a public subnet
-    availability_zone = "us-east-1a"
 }
 
 
