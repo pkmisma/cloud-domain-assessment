@@ -1,7 +1,7 @@
 ---
 
-- name: install webserver copy index.html and enable basic auth
-  hosts: server1
+- name: install webserver copy index.html
+  hosts: all
   become: yes
   tasks:
         - name: install the web server

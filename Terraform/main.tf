@@ -1,9 +1,75 @@
 
+# Creating VPC and Subnets
+
+resource "aws_vpc" "my-vpc" {
+    cidr_block = "10.0.0.0/16"
+    enable_dns_support = "true" #gives you an internal domain name
+    enable_dns_hostnames = "true" #gives you an internal host name
+    enable_classiclink = "false"
+    instance_tenancy = "default"   
+}
+
+resource "aws_subnet" "subnet-public-1" {
+    vpc_id = "${aws_vpc.my-vpc.id}"
+    cidr_block = ["10.0.1.0/24"]
+    map_public_ip_on_launch = "true" //it makes this a public subnet
+    availability_zone = "us-west-1a"
+
+}
+
+# Create Internet Gateway
+
+resource "aws_internet_gateway" "iac-igw" {
+    vpc_id = "${aws_vpc.my-vpc.id}"
+  
+}
+
+# Create the CRT
+
+resource "aws_route_table" "public-crt" {
+    vpc_id = "${aws_vpc.my-vpc.id}"
+    
+    route {
+        //associated subnet can reach everywhere
+        cidr_block = ["0.0.0.0/0"] 
+        //CRT uses this IGW to reach internet
+        gateway_id = "${aws_internet_gateway.iac-igw.id}" 
+    }
+    
+}
+
+resource "aws_route_table_association" "crta-public-subnet-1"{
+    subnet_id = "${aws_subnet.subnet-public-1.id}"
+    route_table_id = "${aws_route_table.public-crt.id}"
+}
+
+resource "aws_security_group" "alb" {
+  name        = "terraform_alb_security_group"
+  description = "Terraform load balancer security group"
+  vpc_id      = "${aws_vpc.my-vpc.id}"
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
+  # Allow all outbound traffic.
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+}
 
 resource "aws_security_group" "project-iac-sg" {
   name = lookup(var.awsprops, "secgroupname")
   description = lookup(var.awsprops, "secgroupname")
-  vpc_id = lookup(var.awsprops, "vpc")
+  vpc_id = "${aws_vpc.my-vpc.id}"
 
   // To Allow HTTP Traffic
   ingress {
@@ -11,6 +77,13 @@ resource "aws_security_group" "project-iac-sg" {
     protocol = "tcp"
     to_port = 22
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 80
+    protocol = "tcp"
+    to_port = 80
+    security_group_id = "${aws_security_group.alb.id}"
   }
 
 
@@ -24,6 +97,9 @@ resource "aws_security_group" "project-iac-sg" {
   lifecycle {
     create_before_destroy = true
   }
+  depends_on = [
+    aws_security_group.alb
+  ]
 }
 
 
@@ -59,28 +135,6 @@ output "ec2instance" {
   value = aws_instance.project-iac.public_ip
 }
 
-resource "aws_security_group" "alb" {
-  name        = "terraform_alb_security_group"
-  description = "Terraform load balancer security group"
-  vpc_id      = lookup(var.awsprops, "vpc")
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-
-  # Allow all outbound traffic.
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-}
 
 resource "aws_lb" "sample_lb" {
     name = lookup(var.alb, "alb_names")
@@ -102,7 +156,7 @@ resource "aws_lb_target_group" "sample_tg" {
   name     = "tf-example-lb-tg"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = lookup(var.alb, "vpc_id")
+  vpc_id   = "${aws_vpc.my-vpc.id}"
 }
 
 resource "aws_lb_target_group_attachment" "tg_attachment_test" {
@@ -117,11 +171,22 @@ resource "aws_lb_listener" "lb_listner_https_test" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:387779321901:certificate/c3c682fc-3adb-43d7-a63b-d2d58156d0e4"
+  certificate_arn   = "arn:aws:acm:us-east-1:491967912244:certificate/e8fa2c01-750f-4e02-82d5-6cc085789a02"
   default_action {
      type             = "forward"
      target_group_arn = aws_lb_target_group.sample_tg.arn
   }
+}
+
+
+# generate inventory file for Ansible
+resource "local_file" "hosts_cfg" {
+  content = templatefile("${path.module}/templates/hosts.tpl",
+    {
+      web_server = aws_instance.project-iac.public_ip
+    }
+  )
+  filename = "../ansible/inventory/hosts.cfg"
 }
 
 

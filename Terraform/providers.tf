@@ -1,3 +1,3 @@
 provider "aws" {
-  region = lookup(var.awsprops, "region")
+  region = "${var.AWS_REGION}"
 }
