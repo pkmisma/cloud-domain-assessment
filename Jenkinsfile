@@ -30,7 +30,7 @@ pipeline {
      stage('Install web-server and modify the index.html') {
        steps {
         dir('Ansible/') {
-        sh 'ssh -i /home/ismail/aws-key.pem ubuntu@3.94.184.140 'df -h''
+        ssh -i /home/ismail/aws-key.pem ubuntu@3.94.184.140 'df -h'
        }        
      }
     }
