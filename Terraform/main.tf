@@ -143,6 +143,7 @@ resource "aws_s3_bucket_acl" "log_bucket-acl" {
   acl    = "private"
 }
 
+
 data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
