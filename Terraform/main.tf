@@ -158,7 +158,7 @@ output "ec2instance" {
 }
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-app-luosareq-bucket"
+  bucket = "my-app-lowsareq-bucket"
 }
 
 resource "aws_s3_bucket_acl" "log_bucket-acl" {
@@ -178,7 +178,7 @@ data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
     effect    = "Allow"
-    resources = ["arn:aws:s3:::my-app-luosareq-bucket/app-lb/AWSLogs/109524301025/*"]
+    resources = ["arn:aws:s3:::my-app-lowsareq-bucket/app-lb/AWSLogs/109524301025/*"]
     actions   = ["s3:PutObject"]
 
     principals {
