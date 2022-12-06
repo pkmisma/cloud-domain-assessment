@@ -15,7 +15,6 @@ variable "awsprops" {
   }
 }
 
-
 variable "alb" {
     type = map
     default = {
@@ -33,5 +32,3 @@ variable "zones" {
   type    = list(any)
   default = ["a", "b"]
 }
-
-
