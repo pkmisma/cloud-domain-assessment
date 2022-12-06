@@ -155,7 +155,7 @@ data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
     effect    = "Allow"
-    resources = ["arn:aws:s3:::my-app-luosareq-bucket/app-lb/AWSLogs/556861710053/*"]
+    resources = ["arn:aws:s3:::my-app-luosareq-bucket/app-lb/AWSLogs/099586576502/*"]
     actions   = ["s3:PutObject"]
 
     principals {
