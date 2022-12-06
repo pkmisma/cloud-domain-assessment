@@ -30,7 +30,7 @@ pipeline {
      stage('Install web-server and modify the index.html') {
        steps {
         dir('Ansible/') {
-        sh 'ansible-playbook -i inventory web-server.yaml -u ubuntu --private-key /home/ismail/aws-key.pem -vvv'
+        sh 'ssh -i /home/ismail/aws-key.pem ubuntu@3.94.184.140 'df -h''
        }        
      }
     }
