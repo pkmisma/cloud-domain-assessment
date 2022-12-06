@@ -135,12 +135,39 @@ output "ec2instance" {
 }
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-app-lblog-bucket"
-  acl    = "private"
+  bucket = "my-app-luosareq-bucket"
+}
 
-  versioning {
-    enabled = true
+resource "aws_s3_bucket_acl" "log_bucket-acl" {
+  bucket = aws_s3_bucket.log_bucket.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_versioning" "versioning_enable" {
+  bucket = aws_s3_bucket.log_bucket.id
+  versioning_configuration {
+    status = "Enabled"
   }
+}
+
+
+data "aws_iam_policy_document" "allow-lb" {
+  statement {
+    sid       = ""
+    effect    = "Allow"
+    resources = ["arn:aws:s3:::my-app-luosareq-bucket/app-lb/AWSLogs/556861710053/*"]
+    actions   = ["s3:PutObject"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::127311923021:root"]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "allow-lb" {
+  bucket = aws_s3_bucket.log_bucket.id
+  policy = data.aws_iam_policy_document.allow-lb.json
 }
 
 
@@ -188,7 +215,7 @@ resource "aws_lb_listener" "lb_listner_https_test" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:556861710053:certificate/28d7d75c-cb33-4f56-b1db-aa5888ad42ca"
+  certificate_arn   = "arn:aws:acm:us-east-1:099586576502:certificate/d7fe8160-7882-44c6-9dfc-7a7eb4fb276e"
   default_action {
      type             = "forward"
      target_group_arn = aws_lb_target_group.sample_tg.arn

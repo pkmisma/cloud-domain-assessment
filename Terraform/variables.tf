@@ -10,11 +10,10 @@ variable "awsprops" {
     ami = "ami-0a6b2839d44d781b2"
     itype = "t2.micro"
     publicip = true
-    keyname = "aws-key"
     secgroupname = "webserver-Sec-Group"
+    keyname = "aws-key"
   }
 }
-
 
 variable "alb" {
     type = map
@@ -33,5 +32,3 @@ variable "zones" {
   type    = list(any)
   default = ["a", "b"]
 }
-
-
