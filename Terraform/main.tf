@@ -135,7 +135,7 @@ output "ec2instance" {
 }
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-app-lblog-bucket"
+  bucket = "my-app-lublog-bucket"
 }
 
 resource "aws_s3_bucket_acl" "log_bucket-acl" {
@@ -147,7 +147,7 @@ data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
     effect    = "Allow"
-    resources = ["arn:aws:s3:::my-app-lblog-bucket/app-lb/AWSLogs/556861710053/*"]
+    resources = ["arn:aws:s3:::my-app-lublog-bucket/app-lb/AWSLogs/556861710053/*"]
     actions   = ["s3:PutObject"]
 
     principals {
