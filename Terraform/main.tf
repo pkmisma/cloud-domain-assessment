@@ -78,7 +78,7 @@ resource "aws_security_group" "alb" {
 
 }
 
-resource "aws_security_group" "project-iac-sg" {
+resource "aws_security_group" "webserver-sg" {
   name = lookup(var.awsprops, "secgroupname")
   description = lookup(var.awsprops, "secgroupname")
   vpc_id = "${aws_vpc.my-vpc.id}"
@@ -106,6 +106,22 @@ resource "aws_security_group" "project-iac-sg" {
   ]
 }
 
+resource "aws_security_group_rule" "lb_rule1" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  security_group_id = aws_security_group.alb.id
+}
+
+resource "aws_security_group_rule" "lb_rule2" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.alb.id
+}
+
 
 resource "aws_instance" "project-iac" {
   ami = lookup(var.awsprops, "ami")
@@ -116,7 +132,7 @@ resource "aws_instance" "project-iac" {
 
 
   vpc_security_group_ids = [
-    aws_security_group.project-iac-sg.id
+    aws_security_group.webserver-sg.id
   ]
   root_block_device {
     delete_on_termination = true
@@ -131,7 +147,7 @@ resource "aws_instance" "project-iac" {
     Managed = "IAC"
   }
 
-  depends_on = [ aws_security_group.project-iac-sg ]
+  depends_on = [ aws_security_group.webserver-sg ]
 }
 
 

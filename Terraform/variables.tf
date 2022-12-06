@@ -18,7 +18,7 @@ variable "awsprops" {
 variable "alb" {
     type = map
     default = {
-    alb_names = "test"
+    alb_names = "app-alb"
     vpc_id = "vpc-066ec79e503c40324"
   }
 }
