@@ -91,6 +91,20 @@ resource "aws_security_group" "webserver-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port = 443
+    protocol = "tcp"
+    to_port = 443
+    security_groups = aws_security_group.alb.name
+  }
+
+  ingress {
+    from_port = 80
+    protocol = "tcp"
+    to_port = 80
+    security_groups = aws_security_group.alb.name
+  }
+
   egress {
     from_port       = 0
     to_port         = 0
@@ -106,23 +120,23 @@ resource "aws_security_group" "webserver-sg" {
   ]
 }
 
-resource "aws_security_group_rule" "lb_rule1" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  source_security_group_id = aws_security_group.alb.id
-  security_group_id = aws_security_group.webserver-sg.id
-}
+#resource "aws_security_group_rule" "lb_rule1" {
+ # type              = "ingress"
+  #from_port         = 80
+  #to_port           = 80
+  #protocol          = "tcp"
+  #source_security_group_id = aws_security_group.alb.id
+  #security_group_id = aws_security_group.webserver-sg.id
+#}
 
-resource "aws_security_group_rule" "lb_rule2" {
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  source_security_group_id = aws_security_group.alb.id
-  security_group_id = aws_security_group.webserver-sg.id
-}
+#resource "aws_security_group_rule" "lb_rule2" {
+ # type              = "ingress"
+  #from_port         = 443
+  #to_port           = 443
+  #protocol          = "tcp"
+  #source_security_group_id = aws_security_group.alb.id
+  #security_group_id = aws_security_group.webserver-sg.id
+#}
 
 
 resource "aws_instance" "project-iac" {
@@ -255,6 +269,7 @@ resource "null_resource" "ansible-command" {
   provisioner "local-exec" {
     command = "ansible-playbook -i ../Ansible/inventory ../Ansible/web-server.yaml -u ubuntu --private-key ~/.ssh/aws-key.pem -vvv"
     
+    depends_on = [ local_file.new_var_file ]
   }
   
 }
