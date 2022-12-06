@@ -1,28 +1,38 @@
 pipeline {
     agent any
-
    stages {
      stage('Checkout the SCM') {
         steps {
               git 'https://github.com/pkmisma/cloud-domain-assessment.git'
      }
      }
-     stage('Terraform Inirt') {
+     stage('Terraform Init') {
         steps {
-            sh 'terraform init'
+            dir('Terraform/') {
+            sh 'terraform init -no-color'
+}
         }
      }
      stage('Terraform plan') {
         steps {
-            sh 'terraform plan'
+            dir('Terraform/') {
+            sh 'terraform plan -no-color'
+}
         }
      }
      stage('Terraform Apply') {
         steps {
-            sh 'terraform apply --auto-approve'
+            dir('Terraform/') {
+            sh 'terraform apply --auto-approve -no-color'
+}
         }
      }
-        
+     stage('Install web-server and modify the index.html') {
+       steps {
+        dir('Ansible/') {
+        sh 'ansible-playbook -i inventory web-server.yaml -vvv'
+       }        
+     }
     }
-   
+}
 }
