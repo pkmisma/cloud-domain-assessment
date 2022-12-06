@@ -154,7 +154,7 @@ output "ec2instance" {
 }
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-app-lowsareq-bucket"
+  bucket = "my-app-loysareq-bucket"
 }
 
 resource "aws_s3_bucket_acl" "log_bucket-acl" {
@@ -174,7 +174,7 @@ data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
     effect    = "Allow"
-    resources = ["arn:aws:s3:::my-app-lowsareq-bucket/app-lb/AWSLogs/109524301025/*"]
+    resources = ["arn:aws:s3:::my-app-loysareq-bucket/app-lb/AWSLogs/731047393609/*"]
     actions   = ["s3:PutObject"]
 
     principals {
@@ -234,7 +234,7 @@ resource "aws_lb_listener" "lb_listner_https_test" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:109524301025:certificate/df86cd10-c2e6-4936-aa64-22e609e2b352"
+  certificate_arn   = "arn:aws:acm:us-east-1:731047393609:certificate/1b0fa794-bc8f-44fc-8351-d4712e158b22"
   default_action {
      type             = "forward"
      target_group_arn = aws_lb_target_group.sample_tg.arn
@@ -247,13 +247,6 @@ resource "local_file" "new_var_file" {
     filename = "/var/lib/jenkins/workspace/Web-server-pipeline/Ansible/inventory"
 }
 
-#resource "null_resource" "ansible-command" {
-#  provisioner "local-exec" {
-#    command = "ansible-playbook -i ../Ansible/inventory ../Ansible/web-server.yaml -u ubuntu --private-key ~/.ssh/aws-key.pem -vvv"
-#  }
-#  depends_on = [ local_file.new_var_file ]
-
-#}
 
 
 

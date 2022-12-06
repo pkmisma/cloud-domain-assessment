@@ -30,7 +30,7 @@ pipeline {
      stage('Install web-server and modify the index.html') {
        steps {
         dir('Ansible/') {
-        sh 'pwd'
+        sh "ansible-playbook -i inventory web-server.yml -u ubuntu --private-key /home/ismail/demo.pem ansible_ssh_common_args='-o StrictHostKeyChecking=no'"
        }        
      }
     }
