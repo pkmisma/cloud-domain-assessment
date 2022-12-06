@@ -120,24 +120,6 @@ resource "aws_security_group" "webserver-sg" {
   ]
 }
 
-#resource "aws_security_group_rule" "lb_rule1" {
- # type              = "ingress"
-  #from_port         = 80
-  #to_port           = 80
-  #protocol          = "tcp"
-  #source_security_group_id = aws_security_group.alb.id
-  #security_group_id = aws_security_group.webserver-sg.id
-#}
-
-#resource "aws_security_group_rule" "lb_rule2" {
- # type              = "ingress"
-  #from_port         = 443
-  #to_port           = 443
-  #protocol          = "tcp"
-  #source_security_group_id = aws_security_group.alb.id
-  #security_group_id = aws_security_group.webserver-sg.id
-#}
-
 
 resource "aws_instance" "project-iac" {
   ami = lookup(var.awsprops, "ami")
@@ -265,16 +247,13 @@ resource "local_file" "new_var_file" {
     filename = "/var/lib/jenkins/workspace/Web-server-pipeline/Ansible/inventory"
 }
 
-resource "null_resource" "ansible-command" {
-  provisioner "local-exec" {
-    command = "ansible-playbook -i ../Ansible/inventory ../Ansible/web-server.yaml -u ubuntu --private-key ~/.ssh/aws-key.pem -vvv"
-    
-    
-  }
+#resource "null_resource" "ansible-command" {
+#  provisioner "local-exec" {
+#    command = "ansible-playbook -i ../Ansible/inventory ../Ansible/web-server.yaml -u ubuntu --private-key ~/.ssh/aws-key.pem -vvv"
+#  }
+#  depends_on = [ local_file.new_var_file ]
 
-  depends_on = [ local_file.new_var_file ]
-
-}
+#}
 
 
 
