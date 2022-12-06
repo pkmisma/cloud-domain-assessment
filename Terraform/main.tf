@@ -143,6 +143,13 @@ resource "aws_s3_bucket_acl" "log_bucket-acl" {
   acl    = "private"
 }
 
+resource "aws_s3_bucket_versioning" "versioning_enable" {
+  bucket = aws_s3_bucket.log_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 
 data "aws_iam_policy_document" "allow-lb" {
   statement {
