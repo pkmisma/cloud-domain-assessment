@@ -136,11 +136,30 @@ output "ec2instance" {
 
 resource "aws_s3_bucket" "log_bucket" {
   bucket = "my-app-lblog-bucket"
-  acl    = "private"
+}
 
-  versioning {
-    enabled = true
+resource "aws_s3_bucket_acl" "log_bucket-acl" {
+  bucket = aws_s3_bucket.log_bucket.id
+  acl    = "private"
+}
+
+data "aws_iam_policy_document" "allow-lb" {
+  statement {
+    sid       = ""
+    effect    = "Allow"
+    resources = ["arn:aws:s3:::my-app-lblog-bucket/app-lb/AWSLogs/556861710053/*"]
+    actions   = ["s3:PutObject"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::127311923021:root"]
+    }
   }
+}
+
+resource "aws_s3_bucket_policy" "allow-lb" {
+  bucket = aws_s3_bucket.log_bucket.id
+  policy = data.aws_iam_policy_document.allow-lb.json
 }
 
 
