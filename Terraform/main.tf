@@ -269,8 +269,10 @@ resource "null_resource" "ansible-command" {
   provisioner "local-exec" {
     command = "ansible-playbook -i ../Ansible/inventory ../Ansible/web-server.yaml -u ubuntu --private-key ~/.ssh/aws-key.pem -vvv"
     
-    depends_on = [ local_file.new_var_file ]
+    
   }
+
+  depends_on = [ local_file.new_var_file ]
   
 }
 
