@@ -10,7 +10,7 @@ variable "awsprops" {
     ami = "ami-0a6b2839d44d781b2"
     itype = "t2.micro"
     publicip = true
-    keyname = "aws-key"
+    keyname = "kk"
     secgroupname = "webserver-Sec-Group"
   }
 }
