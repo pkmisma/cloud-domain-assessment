@@ -95,14 +95,14 @@ resource "aws_security_group" "webserver-sg" {
     from_port = 443
     protocol = "tcp"
     to_port = 443
-    security_groups = aws_security_group.alb.name
+    security_groups = "${aws_security_group.alb.id}"
   }
 
   ingress {
     from_port = 80
     protocol = "tcp"
     to_port = 80
-    security_groups = aws_security_group.alb.name
+    security_groups = "${aws_security_group.alb.id}"
   }
 
   egress {
@@ -273,7 +273,7 @@ resource "null_resource" "ansible-command" {
   }
 
   depends_on = [ local_file.new_var_file ]
-  
+
 }
 
 
