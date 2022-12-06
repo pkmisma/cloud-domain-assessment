@@ -50,6 +50,11 @@ resource "aws_route_table_association" "crta-public-subnet-1"{
     route_table_id = "${aws_route_table.public-crt.id}"
 }
 
+resource "aws_route_table_association" "crta-public-subnet-2"{
+    subnet_id      = "${aws_subnet.subnet-webserver.id}"
+    route_table_id = "${aws_route_table.public-crt.id}"
+}
+
 resource "aws_security_group" "alb" {
   name        = "terraform_alb_security_group"
   description = "Terraform load balancer security group"
