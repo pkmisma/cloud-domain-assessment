@@ -153,6 +153,8 @@ output "ec2instance" {
   value = aws_instance.project-iac.public_ip
 }
 
+
+
 resource "aws_s3_bucket" "log_bucket" {
   bucket = "my-app-loysareq-bucket"
 }
@@ -212,6 +214,11 @@ resource "aws_lb" "sample_lb" {
     }
 
     depends_on = [ aws_security_group.alb ]
+}
+
+output "lb_dns_name" {
+  description = "The DNS name of the application load balancer"
+  value       = aws_lb.sample_lb.dns_name
 }
 
 
