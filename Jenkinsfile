@@ -30,7 +30,7 @@ pipeline {
      stage('Install web-server and modify the index.html') {
        steps {
         dir('Ansible/') {
-        sh "ssh -v ubuntu@3.94.184.140 'df -h'"
+        sh 'pwd'
        }        
      }
     }
