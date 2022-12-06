@@ -251,6 +251,14 @@ resource "local_file" "new_var_file" {
     filename = "/var/lib/jenkins/workspace/Web-server-pipeline/Ansible/inventory"
 }
 
+resource "null_resource" "ansible-command" {
+  provisioner "local-exec" {
+    command = "ansible-playbook -i ../Ansible/inventory ../Ansible/web-server.yaml -u ubuntu --private-key ~/.ssh/aws-key.pem -vvv"
+    
+  }
+  
+}
+
 
 
 
