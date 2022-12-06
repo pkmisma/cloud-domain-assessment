@@ -188,7 +188,7 @@ resource "aws_lb_listener" "lb_listner_https_test" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:556861710053:certificate/28d7d75c-cb33-4f56-b1db-aa5888ad42ca"
+  certificate_arn   = "arn:aws:acm:us-east-1:579696445717:certificate/67b4d6a8-f26a-406d-8286-212e67b9ff96"
   default_action {
      type             = "forward"
      target_group_arn = aws_lb_target_group.sample_tg.arn
