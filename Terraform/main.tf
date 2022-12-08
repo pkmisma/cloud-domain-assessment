@@ -176,7 +176,7 @@ data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
     effect    = "Allow"
-    resources = ["arn:aws:s3:::my-app-loysareq-bucket/app-lb/AWSLogs/731047393609/*"]
+    resources = ["arn:aws:s3:::my-app-loysareq-bucket/app-lb/AWSLogs/844298705625/*"]
     actions   = ["s3:PutObject"]
 
     principals {
@@ -241,7 +241,7 @@ resource "aws_lb_listener" "lb_listner_https_test" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:731047393609:certificate/1b0fa794-bc8f-44fc-8351-d4712e158b22"
+  certificate_arn   = "arn:aws:acm:us-east-1:844298705625:certificate/f7c634c0-0ea2-4676-b7d6-097bac47870b"
   default_action {
      type             = "forward"
      target_group_arn = aws_lb_target_group.sample_tg.arn
