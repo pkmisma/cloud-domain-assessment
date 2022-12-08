@@ -28,7 +28,7 @@ pipeline {
       }
       steps {
          script {
-            input message: "Do you want to apply ?"
+            input message: 'proceed to apply', ok: 'Apply'
          }
       }
      }
