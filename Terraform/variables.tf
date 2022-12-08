@@ -2,7 +2,6 @@ variable "aws_region" {
     default = "us-east-1"
 }
 
-
 variable "awsprops" {
     type = map
     default = {
