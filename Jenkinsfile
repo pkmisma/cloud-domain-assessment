@@ -20,6 +20,18 @@ pipeline {
 }
         }
      }
+     stage ('Approval') {
+      when {
+         not {
+            equals expected: true, actual: false
+         }
+      }
+      steps {
+         script {
+            input message: "Do you want to apply ?"
+         }
+      }
+     }
      stage('Terraform Apply') {
         steps {
             dir('Terraform/') {
