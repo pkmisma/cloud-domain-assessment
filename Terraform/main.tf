@@ -162,7 +162,7 @@ output "ec2instance" {
 # Creating S3 Bucket and forwarding access logs to the bucket
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-app-loysareq-bucket"
+  bucket = "my-app-losareq-bucket"
 }
 
 resource "aws_s3_bucket_acl" "log_bucket-acl" {
@@ -182,7 +182,7 @@ data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
     effect    = "Allow"
-    resources = ["arn:aws:s3:::my-app-loysareq-bucket/app-lb/AWSLogs/380038324395/*"]
+    resources = ["arn:aws:s3:::my-app-losareq-bucket/app-lb/AWSLogs/380038324395/*"]
     actions   = ["s3:PutObject"]
 
     principals {
