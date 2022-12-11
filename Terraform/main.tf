@@ -259,7 +259,7 @@ resource "aws_lb_listener" "lb_listner_https_test" {
 # Generate inventory file for Ansible
 resource "local_file" "new_var_file" {
     content  = "${aws_instance.project-iac.public_ip}"
-    filename = "/var/lib/jenkins/workspace/Web-server-pipeline/Ansible/inventory"
+    filename = "../Ansible/inventory"
 }
 
 
