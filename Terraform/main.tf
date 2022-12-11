@@ -55,7 +55,8 @@ resource "aws_route_table_association" "crta-public-subnet-2"{
     route_table_id = "${aws_route_table.public-crt.id}"
 }
 
-resource "aws_security_group" "alb" {
+# Creating  security group for Application Load balancer
+resource "aws_security_group" "alb-sg" {
   name        = "terraform_alb_security_group"
   description = "Terraform load balancer security group"
   vpc_id      = "${aws_vpc.my-vpc.id}"
@@ -78,12 +79,14 @@ resource "aws_security_group" "alb" {
 
 }
 
+# Creating  security group for Web-server
+
 resource "aws_security_group" "webserver-sg" {
   name = lookup(var.awsprops, "secgroupname")
   description = lookup(var.awsprops, "secgroupname")
   vpc_id = "${aws_vpc.my-vpc.id}"
 
-  // To Allow HTTP Traffic
+  // To Allow SSH Traffic
   ingress {
     from_port = 22
     protocol = "tcp"
@@ -91,18 +94,19 @@ resource "aws_security_group" "webserver-sg" {
     cidr_blocks     = ["0.0.0.0/0"]
   }
 
+// To Allow  Traffic from ALB-Security Group
   ingress {
     from_port = 443
     protocol = "tcp"
     to_port = 443
-    security_groups = ["${aws_security_group.alb.id}"]
+    security_groups = ["${aws_security_group.alb-sg.id}"]
   }
 
   ingress {
     from_port = 80
     protocol = "tcp"
     to_port = 80
-    security_groups = ["${aws_security_group.alb.id}"]
+    security_groups = ["${aws_security_group.alb-sg.id}"]
   }
 
   egress {
@@ -116,10 +120,12 @@ resource "aws_security_group" "webserver-sg" {
     create_before_destroy = true
   }
   depends_on = [
-    aws_security_group.alb
+    aws_security_group.alb-sg
   ]
 }
 
+
+# Creating Web-server Instance
 
 resource "aws_instance" "project-iac" {
   ami = lookup(var.awsprops, "ami")
@@ -153,7 +159,7 @@ output "ec2instance" {
   value = aws_instance.project-iac.public_ip
 }
 
-
+# Creating S3 Bucket and forwarding access logs to the bucket
 
 resource "aws_s3_bucket" "log_bucket" {
   bucket = "my-app-loysareq-bucket"
@@ -176,7 +182,7 @@ data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
     effect    = "Allow"
-    resources = ["arn:aws:s3:::my-app-loysareq-bucket/app-lb/AWSLogs/844298705625/*"]
+    resources = ["arn:aws:s3:::my-app-loysareq-bucket/app-lb/AWSLogs/380038324395/*"]
     actions   = ["s3:PutObject"]
 
     principals {
@@ -191,12 +197,12 @@ resource "aws_s3_bucket_policy" "allow-lb" {
   policy = data.aws_iam_policy_document.allow-lb.json
 }
 
-
+# creating Application Load Balancer
 resource "aws_lb" "sample_lb" {
     name = lookup(var.alb, "alb_names")
     internal           = false
     load_balancer_type = "application" 
-    security_groups    = ["${aws_security_group.alb.id}"]
+    security_groups    = ["${aws_security_group.alb-sg.id}"]
     subnets = aws_subnet.subnet-public.*.id
     enable_cross_zone_load_balancing = "true"
 
@@ -213,7 +219,7 @@ resource "aws_lb" "sample_lb" {
          Role        = "Sample-Application"
     }
 
-    depends_on = [ aws_security_group.alb ]
+    depends_on = [ aws_security_group.alb-sg ]
 }
 
 output "lb_dns_name" {
@@ -221,34 +227,36 @@ output "lb_dns_name" {
   value       = aws_lb.sample_lb.dns_name
 }
 
+# Creating Target Group for ALB
 
-resource "aws_lb_target_group" "sample_tg" {
-  name     = "tf-example-lb-tg"
+resource "aws_lb_target_group" "alb_tg" {
+  name     = "alb-tg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.my-vpc.id}"
 }
 
 resource "aws_lb_target_group_attachment" "tg_attachment_test" {
-    target_group_arn = aws_lb_target_group.sample_tg.arn
+    target_group_arn = aws_lb_target_group.alb_tg.arn
     target_id        = aws_instance.project-iac.id
     port             = 80
 }
 
+# Creating Listener
 
 resource "aws_lb_listener" "lb_listner_https_test" {
   load_balancer_arn = aws_lb.sample_lb.id
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:844298705625:certificate/f7c634c0-0ea2-4676-b7d6-097bac47870b"
+  certificate_arn   = "arn:aws:acm:us-east-1:380038324395:certificate/fabbc169-aef7-4479-8d5c-e653fb6071a1"
   default_action {
      type             = "forward"
-     target_group_arn = aws_lb_target_group.sample_tg.arn
+     target_group_arn = aws_lb_target_group.alb_tg.arn
   }
 }
 
-# generate inventory file for Ansible
+# Generate inventory file for Ansible
 resource "local_file" "new_var_file" {
     content  = "${aws_instance.project-iac.public_ip}"
     filename = "/var/lib/jenkins/workspace/Web-server-pipeline/Ansible/inventory"

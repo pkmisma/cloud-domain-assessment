@@ -6,7 +6,6 @@ variable "awsprops" {
     type = map
     default = {
     region = "us-east-1"
-    vpc = "vpc-066ec79e503c40324"
     ami = "ami-0a6b2839d44d781b2"
     itype = "t2.micro"
     publicip = true
