@@ -18,7 +18,7 @@
           tags:
               - index
 
-   handlers:
+     handlers:
 +       - name: Restart Nginx
 +         service:
 +           name: nginx
