@@ -18,10 +18,8 @@
           tags:
               - index
 
-        - name: restart the service
-          service:
-                name: nginx
-                state: restarted
-                enabled: yes
-          tags:
-              - restart
+        handlers:
++    - name: Restart Nginx
++      service:
++        name: nginx
++        state: restarted
