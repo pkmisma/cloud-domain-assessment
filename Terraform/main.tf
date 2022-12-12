@@ -162,7 +162,7 @@ output "ec2instance" {
 # Creating S3 Bucket and forwarding access logs to the bucket
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-app-losareq-bucket"
+  bucket = "my-app-loadbalcr-buckt"
 }
 
 resource "aws_s3_bucket_acl" "log_bucket-acl" {
@@ -182,7 +182,7 @@ data "aws_iam_policy_document" "allow-lb" {
   statement {
     sid       = ""
     effect    = "Allow"
-    resources = ["arn:aws:s3:::my-app-losareq-bucket/app-lb/AWSLogs/380038324395/*"]
+    resources = ["arn:aws:s3:::my-app-loadbalcr-buckt/app-lb/AWSLogs/556861710053/*"]
     actions   = ["s3:PutObject"]
 
     principals {
@@ -249,7 +249,7 @@ resource "aws_lb_listener" "lb_listner_https_test" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:380038324395:certificate/fabbc169-aef7-4479-8d5c-e653fb6071a1"
+  certificate_arn   = "arn:aws:acm:us-east-1:556861710053:certificate/28d7d75c-cb33-4f56-b1db-aa5888ad42ca"
   default_action {
      type             = "forward"
      target_group_arn = aws_lb_target_group.alb_tg.arn

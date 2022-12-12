@@ -42,7 +42,7 @@ pipeline {
      stage('Install web-server and modify the index.html') {
        steps {
         dir('Ansible/') {
-        sh 'ansible-playbook -i inventory web-server.yaml -u ubuntu --private-key /home/ismail/new-1.pem'
+        sh 'ansible-playbook -i inventory web-server.yaml -u ubuntu --private-key /home/ismail/web-app.pem'
        }        
      }
     }

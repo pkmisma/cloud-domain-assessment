@@ -10,7 +10,7 @@ variable "awsprops" {
     itype = "t2.micro"
     publicip = true
     secgroupname = "webserver-Sec-Group"
-    keyname = "new-1"
+    keyname = "web-app"
   }
 }
 
