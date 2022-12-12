@@ -91,7 +91,7 @@ resource "aws_security_group" "webserver-sg" {
     from_port = 22
     protocol = "tcp"
     to_port = 22
-    security_groups = ["sg-0e635467f70eba2bf"]
+    cidr_blocks     = ["0.0.0.0/0"]
   }
 
 // To Allow  Traffic from ALB-Security Group
