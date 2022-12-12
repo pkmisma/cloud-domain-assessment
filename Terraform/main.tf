@@ -154,7 +154,6 @@ resource "aws_instance" "project-iac" {
   depends_on = [ aws_security_group.webserver-sg ]
 }
 
-
 output "ec2instance" {
   value = aws_instance.project-iac.public_ip
 }
