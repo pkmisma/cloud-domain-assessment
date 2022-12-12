@@ -9,14 +9,14 @@ pipeline {
      stage('Terraform Init') {
         steps {
             dir('Terraform/') {
-            sh 'sudo terraform init -no-color'
+            sh 'terraform init -no-color'
 }
         }
      }
      stage('Terraform plan') {
         steps {
             dir('Terraform/') {
-            sh 'sudo terraform plan -no-color'
+            sh 'terraform plan -no-color'
 }
         }
      }
